@@ -1,0 +1,57 @@
+import React, { useState } from "react";
+import "./styles.css";
+
+function EvenOrOddChecker() {
+  const [num, setNum] = useState("")
+  const [result, setResult] = useState("")
+  const [checking, setChecking] = useState(false)
+  const check = () => {
+    const parsedNum = parseInt(num.trim(), 10)
+    setResult("");
+    setChecking(true);
+    setTimeout(() => {
+      setChecking(false)
+      if (isNaN(parsedNum)) {
+        setChecking(false)
+        setResult(`Please enter a valid number.`)
+        return
+      } else if (parsedNum % 2 === 0) {
+        setResult(`The number ${parsedNum} is even.`)
+      } else if (parsedNum % 2 !== 0) {
+        setResult(`The number ${parsedNum} is odd.`)
+      } else {
+        setResult(`Please enter a valid number.`)
+      }
+    },1000)
+  }
+  return (
+    <div className="even-odd-container">
+      <h1 className="title">Even or Odd Checker</h1>
+
+      <input
+        data-testid="number-input"
+        className="number-input"
+        type="text"
+        placeholder="Enter a number"
+        value={num}
+        onChange={(e) => setNum(e.target.value)}
+      />
+
+      <button       data-testid="check-button"
+      className="check-button"
+      onClick={() => check()}>Check</button>
+
+      <div className="result-area" data-testid="loading">
+        {checking && "Checking..."}
+        <div className="result" data-testid = "result">{result}</div>
+      </div>
+    </div>
+  );
+}
+
+export default EvenOrOddChecker;
+
+
+
+
+
