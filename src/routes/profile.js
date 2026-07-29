@@ -1,6 +1,7 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
 const { userAuth } = require('../middleware/auth');
-const {validateProfileEditData} = require("../utils/validation")
+const { validateProfileEditData, validatePasswordUpdate } = require("../utils/validation")
 const profileRouter = express.Router()
 
 profileRouter.get("/profile/view", userAuth, async(req, res) => {
@@ -8,7 +9,7 @@ profileRouter.get("/profile/view", userAuth, async(req, res) => {
         res.send(req.user);
       
     } catch(err){
-        res.status(401).send(err).message    
+        res.status(400).json({ message: err.message });
     }
 });
 
@@ -29,7 +30,29 @@ profileRouter.patch("/profile/edit", userAuth, async(req, res) => {
         });
       
     } catch(err){
-        res.status(401).send(err).message    
+        res.status(400).json({ message: err.message });
+    }
+});
+
+profileRouter.patch("/profile/updatePassword", userAuth, async(req, res) => {
+    try{
+        validatePasswordUpdate(req);
+
+        const { currentPassword, newPassword } = req.body;
+        const loggedInUser = req.user;
+
+        const isPasswordValid = await bcrypt.compare(currentPassword, loggedInUser.password);
+        if (!isPasswordValid) {
+            throw new Error("Current password is incorrect");
+        }
+
+        loggedInUser.password = await bcrypt.hash(newPassword, 10);
+        await loggedInUser.save();
+
+        res.json({ message: "Password updated successfully" });
+      
+    } catch(err){
+        res.status(400).json({ message: err.message });
     }
 });
 

@@ -1,5 +1,4 @@
 const validator = require('validator')
-const { validate } = require('../models/userSchema')
 
 const validateSignUp = (req) =>{
     const {firstName, lastName, password, email} = req.body
@@ -30,7 +29,20 @@ const validateProfileEditData = (req) => {
       return isEditAllowed;
 }
 
+const validatePasswordUpdate = (req) => {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+        throw new Error("Current password and new password are required");
+    } else if (!validator.isStrongPassword(newPassword)) {
+        throw new Error("Please enter strong password");
+    } else if (currentPassword === newPassword) {
+        throw new Error("New password must be different from current password");
+    }
+}
+
 module.exports = {
     validateSignUp,
-    validateProfileEditData
+    validateProfileEditData,
+    validatePasswordUpdate
 }
