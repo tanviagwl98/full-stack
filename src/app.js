@@ -1,12 +1,11 @@
 const express = require("express");
 
 require("dotenv").config();
-
+require("./utils/cron")
 const dbConnect = require("./config/database");
 const cookieParser = require("cookie-parser");
 const cors = require("cors")
 const app = express();
-
 
 app.use(cors({
   origin:"http://localhost:5173",
@@ -20,6 +19,7 @@ const authRouter = require('./routes/auth')
 const profileRouter = require('./routes/profile')
 const requestsRouter = require('./routes/requests');
 const userRouter = require("./routes/user");
+const paymentRouter = require("./routes/payment");
 // app.get("/user", async (req, res) => {
 //   let email = req.body.email;
 //   try {
@@ -76,6 +76,8 @@ app.use('/', profileRouter)
 app.use('/', requestsRouter)
 
 app.use('/', userRouter);
+
+app.use('/', paymentRouter);
 
 dbConnect()
   .then(() => {
