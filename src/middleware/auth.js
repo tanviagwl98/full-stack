@@ -5,14 +5,14 @@ const userAuth= async(req,res,next)=>{
 try{
     const {token} = req.cookies;
     if(!token){
-        throw new Error("Invalid token")
+        res.status(401).send("Please login")
     }
     const decodedObj = await jwt.verify(token, "DEVTinder$70");
 
     const {_id} = decodedObj;
     const user = await User.findById(_id)
     if(!user){
-        throw new Error("User not found")
+        res.status(401).send("Please login")
     }
 
     req.user = user

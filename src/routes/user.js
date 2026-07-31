@@ -36,12 +36,13 @@ userRouter.get("/user/connections", userAuth,  async(req,res) => {
         .populate("fromUserId", USER_SAFE_DATA)
         .populate("toUserId", USER_SAFE_DATA)
         const data = connectionRequests.map((row) => {
+            debugger
             if (row.fromUserId._id.toString() === loggedInUser._id.toString()) {
               return row.toUserId;
             }
             return row.fromUserId;
           });
-      
+          console.log(data)
           res.json({ data });
     } catch(err){
         res.statusCode(400).send("Error: " + err.message)
