@@ -1,10 +1,14 @@
 // const {MongoClient} = require("mongodb")
 
 const mongoose = require('mongoose')
-const url = "mongodb+srv://vini98agwl:Happiness98@nodelearning.lydi9.mongodb.net/devMatchDb"
+const url = process.env.CONNECTION_STRING
 
 const dbConnect = async () => {
-    await mongoose.connect(url)
+    try{
+        await mongoose.connect(url)
+    } catch(err){
+        
+    }
 }
 
 module.exports = dbConnect;
