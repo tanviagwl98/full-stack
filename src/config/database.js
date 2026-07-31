@@ -7,7 +7,8 @@ const dbConnect = async () => {
     try{
         await mongoose.connect(url)
     } catch(err){
-        
+        console.error("MongoDB Connection Error:", err);
+        throw err;
     }
 }
 
