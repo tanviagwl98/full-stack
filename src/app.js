@@ -5,6 +5,10 @@ require("./utils/cron")
 const dbConnect = require("./config/database");
 const cookieParser = require("cookie-parser");
 const cors = require("cors")
+
+const http = require("http")
+
+
 const app = express();
 
 app.use(cors({
@@ -20,6 +24,8 @@ const profileRouter = require('./routes/profile')
 const requestsRouter = require('./routes/requests');
 const userRouter = require("./routes/user");
 const paymentRouter = require("./routes/payment");
+const initializeSocket = require("./utils/socket");
+const chatRouter = require("./routes/chat")
 // app.get("/user", async (req, res) => {
 //   let email = req.body.email;
 //   try {
@@ -79,10 +85,15 @@ app.use('/', userRouter);
 
 app.use('/', paymentRouter);
 
+app.use('/', chatRouter)
+
+
+const server = http.createServer(app)
+initializeSocket(server)
 dbConnect()
   .then(() => {
     console.log("database connected successully");
-    app.listen("7777", (req, res) => {
+    server.listen("7777", (req, res) => {
       console.log("Hello");
     });
   })
